@@ -11,7 +11,6 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
-    [SerializeField] private GameObject PH_tile;
     [SerializeField] private GameObject pfb_BlankTile;
     [SerializeField] private GameObject pfb_GrassTile;
     [SerializeField] private GameObject pfb_RoadTile;
@@ -41,35 +40,19 @@ public class TerrainGeneration : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            float tempTileX = PH_tile.transform.position.x - map_tileInterval;
-            Vector3 tempTilePos = new Vector3(tempTileX, PH_tile.transform.position.y, PH_tile.transform.position.z);
-            PH_tile.transform.position = tempTilePos;
-
-            //StartCoroutine(TreadmillBackward());
+            
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            float tempTileX = PH_tile.transform.position.x + map_tileInterval;
-            Vector3 tempTilePos = new Vector3(tempTileX, PH_tile.transform.position.y, PH_tile.transform.position.z);
-            PH_tile.transform.position = tempTilePos;
-
-            if (!map_isMoving)
-            {
-                map_isMoving = true;
-                StartCoroutine(TreadmillForward());
-            }
+            
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            float tempTileZ = PH_tile.transform.position.z + map_tileInterval;
-            Vector3 tempTilePos = new Vector3(PH_tile.transform.position.x, PH_tile.transform.position.y, tempTileZ);
-            PH_tile.transform.position = tempTilePos;
+            
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            float tempTileZ = PH_tile.transform.position.z - map_tileInterval;
-            Vector3 tempTilePos = new Vector3(PH_tile.transform.position.x, PH_tile.transform.position.y, tempTileZ);
-            PH_tile.transform.position = tempTilePos;
+            
         }
     }
 
@@ -198,7 +181,11 @@ public class TerrainGeneration : MonoBehaviour
     {
         if (backstepCount <= 0)
         {
-            StartCoroutine(TreadmillForward());
+            if (!map_isMoving)
+            {
+                map_isMoving = true;
+                StartCoroutine(TreadmillForward());
+            }
             return true;
         }
         else
@@ -211,4 +198,8 @@ public class TerrainGeneration : MonoBehaviour
     {
         return true;
     }
+
+    public float GetMapTileInterval => map_tileInterval;
+    public int GetMapHalfWidth => map_widthHalf;
+    public int GetMapFullWidth => map_widthTotal;
 }
