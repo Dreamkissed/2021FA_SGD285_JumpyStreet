@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject TerrainController;
     [SerializeField] private int player_MaxBackstepCount = 2;
     private int player_CurrentBackstepCount;
+    private int player_ScoreCount;
     private float map_MaxEdgePos;
 
     private void Start()
