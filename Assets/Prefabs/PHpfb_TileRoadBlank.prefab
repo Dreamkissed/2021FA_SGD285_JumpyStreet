@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7511222631509045632}
   m_Layer: 0
   m_Name: PHpfb_TileRoadBlank
-  m_TagString: Untagged
+  m_TagString: Pass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

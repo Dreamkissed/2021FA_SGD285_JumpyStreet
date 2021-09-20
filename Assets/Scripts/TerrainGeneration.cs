@@ -35,6 +35,8 @@ public class TerrainGeneration : MonoBehaviour
     private readonly float map_tileInterval = 5.0f;  //edge length of square tiles
     private bool map_isMoving = false;
 
+    private byte player_tileMap;
+
     private void Awake()
     {
         GrassArray = new GameObject[] { pfb_GrassTile, pfb_GrassFence, pfb_GrassTree };  //!!!MN!!!
@@ -203,6 +205,46 @@ public class TerrainGeneration : MonoBehaviour
         map_isMoving = true;
     }
 
+    private byte SurroundingTileMap(int x, int z)
+    {
+        player_tileMap = 0b00000000;
+
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b10000000;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b01000000;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00100000;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00010000;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00001000;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal + -1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00000100;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00000010;
+        }
+        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        {
+            player_tileMap += 0b00000001;
+        }
+
+        return player_tileMap;
+    }
+
     public bool Map_MoveForward(int backstepCount)
     {
         if (backstepCount <= 0)
@@ -223,6 +265,26 @@ public class TerrainGeneration : MonoBehaviour
     public bool Map_MoveBackwards(int backstepCount)
     {
         return true;
+    }
+
+    public byte Map_PlayerTileMap(Vector3 playerPos)
+    {
+        for (int x = 0; x < map_lengthTotal; x++)
+        {
+            float tempRow = map_arrayTiles[x, 0].transform.position.x;
+            if (tempRow >= playerPos.x - 0.1 && tempRow <= playerPos.x + 0.1)
+            {
+                for (int z = 0; z < map_widthTotal; z++)
+                {
+                    float tempColumn = map_arrayTiles[x, z].transform.position.z;
+                    if (tempColumn >= playerPos.z - 0.1 && tempColumn <= playerPos.z + 0.1)
+                    {
+                        return SurroundingTileMap(x, z);
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
     public float GetMapTileInterval => map_tileInterval;
