@@ -13,9 +13,18 @@ public class TerrainGeneration : MonoBehaviour
 {
     [SerializeField] private GameObject pfb_BlankTile;
     [SerializeField] private GameObject pfb_GrassTile;
+    [SerializeField] private GameObject pfb_GrassFence;
+    [SerializeField] private GameObject pfb_GrassTree;
     [SerializeField] private GameObject pfb_RoadTile;
     [SerializeField] private GameObject pfb_WaterTile;
+    [SerializeField] private GameObject pfb_WaterLog;
     [SerializeField] private int biomeCount = 3;
+    /* These two are magic number arrays, because for this project's scale, it
+     * is easier and more time effective to just bruteforce the random tile
+     * selection than mess with \resources, AddressableAssets, or other plug-in
+     */
+    private GameObject[] GrassArray;
+    private GameObject[] WaterArray;
 
     [SerializeField] private int map_lengthForward = 7;  //tiles ahead of player
     [SerializeField] private int map_lengthBack = 3;  //tiles behind player
@@ -28,6 +37,9 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Awake()
     {
+        GrassArray = new GameObject[] { pfb_GrassTile, pfb_GrassFence, pfb_GrassTree };  //!!!MN!!!
+        WaterArray = new GameObject[] { pfb_WaterTile, pfb_WaterLog };  //!!!MN!!!
+
         MapGeneration();
     }
 
@@ -64,7 +76,9 @@ public class TerrainGeneration : MonoBehaviour
 
         for (int l = 0; l < map_lengthTotal; l++)
         {
-            GameObject rowBiome = BiomeRandomBiomeRow();
+            //GameObject rowBiome = BiomeRandomBiomeRow();
+            int rowBiome = Random.Range(0, biomeCount);
+
             for (int w = 0; w < map_widthTotal; w++)
             {
                 float temp_tilePosX = ((float)l - (float)map_lengthBack) * map_tileInterval;
@@ -72,7 +86,7 @@ public class TerrainGeneration : MonoBehaviour
                 float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
                 Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
 
-                map_arrayTiles[l, w] = Instantiate(rowBiome, temp_tilePos, Quaternion.identity);
+                map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(rowBiome), temp_tilePos, Quaternion.identity);
             }
         }
 
@@ -81,7 +95,8 @@ public class TerrainGeneration : MonoBehaviour
 
     private bool MapNewRowFront()
     {
-        GameObject rowBiome = BiomeRandomBiomeRow();
+        //GameObject rowBiome = BiomeRandomBiomeRow();
+        int rowBiome = Random.Range(0, biomeCount);
 
         for (int w = 0; w < map_widthTotal; w++)
         {
@@ -92,7 +107,7 @@ public class TerrainGeneration : MonoBehaviour
             float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
             Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
 
-            map_arrayTiles[map_backRow, w] = Instantiate(rowBiome, temp_tilePos, Quaternion.identity);
+            map_arrayTiles[map_backRow, w] = Instantiate(BiomeRandomBiomeRow(rowBiome), temp_tilePos, Quaternion.identity);
             /*
             tempPositionVector = map_arrayTiles[map_backRow, w].transform.position;
             tempPositionVector.x = map_lengthForward * map_tileInterval;
@@ -113,6 +128,17 @@ public class TerrainGeneration : MonoBehaviour
             0 => pfb_GrassTile,
             1 => pfb_RoadTile,
             2 => pfb_WaterTile,
+            _ => pfb_BlankTile,
+        };
+    }
+
+    private GameObject BiomeRandomBiomeRow(int biome)
+    {
+        return biome switch
+        {
+            0 => GrassArray[Random.Range(0, GrassArray.Length)],
+            1 => pfb_RoadTile,
+            2 => WaterArray[Random.Range(0, WaterArray.Length)],
             _ => pfb_BlankTile,
         };
     }

@@ -154,8 +154,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pfb_BlankTile: {fileID: 6135324229466800307, guid: 9b372ddc42b5f8941a7af04e136cfe51, type: 3}
   pfb_GrassTile: {fileID: 6221453490438230658, guid: edb0a49cc036ff642a7f63e954d2a60a, type: 3}
+  pfb_GrassFence: {fileID: 6221453490438230658, guid: 77bb04b7fca25c5499d3f2a8dc1405b7, type: 3}
+  pfb_GrassTree: {fileID: 6221453490438230658, guid: 54aeb662200a281429da08acba433b7a, type: 3}
   pfb_RoadTile: {fileID: 7511222631509045639, guid: 591498a52a88b744889d64a896c7ae94, type: 3}
   pfb_WaterTile: {fileID: 6873171379702291922, guid: de3b97ad0cedc2f41b85a7525c1d945d, type: 3}
+  pfb_WaterLog: {fileID: 6873171379702291922, guid: edecbfe2bde026e4bbcf78f1bde01c0b, type: 3}
   biomeCount: 3
   map_lengthForward: 7
   map_lengthBack: 3
