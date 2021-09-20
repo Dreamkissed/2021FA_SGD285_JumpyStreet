@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2882618033246755317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2882618033246755307}
+  - component: {fileID: 2882618033246755306}
+  m_Layer: 0
+  m_Name: TerrainController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2882618033246755307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2882618033246755317}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2882618033246755306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2882618033246755317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b26d97f055bda8459192979bf877fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pfb_BlankTile: {fileID: 6135324229466800307, guid: 9b372ddc42b5f8941a7af04e136cfe51, type: 3}
+  pfb_GrassTile: {fileID: 6221453490438230658, guid: edb0a49cc036ff642a7f63e954d2a60a, type: 3}
+  pfb_GrassFence: {fileID: 6221453490438230658, guid: 77bb04b7fca25c5499d3f2a8dc1405b7, type: 3}
+  pfb_GrassTree: {fileID: 6221453490438230658, guid: 54aeb662200a281429da08acba433b7a, type: 3}
+  pfb_RoadTile: {fileID: 7511222631509045639, guid: 591498a52a88b744889d64a896c7ae94, type: 3}
+  pfb_WaterTile: {fileID: 6873171379702291922, guid: de3b97ad0cedc2f41b85a7525c1d945d, type: 3}
+  pfb_WaterLog: {fileID: 6873171379702291922, guid: edecbfe2bde026e4bbcf78f1bde01c0b, type: 3}
+  biomeCount: 3
+  map_lengthForward: 7
+  map_lengthBack: 3
+  map_widthHalf: 5

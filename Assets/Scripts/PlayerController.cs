@@ -7,10 +7,12 @@
 /////////////////////////////////////////////
 
 using UnityEngine;
+using System.Collections; //New
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerObject;
+    [SerializeField] private GameObject PlayerModel; //New
     [SerializeField] private GameObject TerrainController;
     [SerializeField] private int player_MaxBackstepCount = 2;
     private int player_CurrentBackstepCount;
@@ -35,10 +37,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             MovePlayerLeft();
+            StartCoroutine(AlignPlayerModel()); //New
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             MovePlayerRight();
+            StartCoroutine(AlignPlayerModel()); //New
         }
     }
 
@@ -93,7 +97,6 @@ public class PlayerController : MonoBehaviour
             tempPlayerPos.z += TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
             PlayerObject.transform.position = tempPlayerPos;
         }
-        
         return true;
     }
 
@@ -105,7 +108,21 @@ public class PlayerController : MonoBehaviour
             tempPlayerPos.z -= TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
             PlayerObject.transform.position = tempPlayerPos;
         }
-
         return true;
+    }
+
+    IEnumerator AlignPlayerModel() //New
+    {
+        float timeSinceStarted = 0f;
+        while (true)
+        {
+            timeSinceStarted += Time.deltaTime;
+            PlayerModel.transform.position = Vector3.Lerp(PlayerModel.transform.position, PlayerObject.transform.position, timeSinceStarted);
+            if (PlayerModel.transform.position == PlayerObject.transform.position)
+            {
+                yield break;
+            }
+            yield return null;
+        }
     }
 }
