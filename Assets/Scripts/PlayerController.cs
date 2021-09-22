@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private int player_ScoreCount;
     private float map_MaxEdgePos;
     private byte player_tileMap;
+    private bool player_IsMoving = false;
 
     private void Start()
     {
@@ -34,28 +35,55 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MovePlayerForward();
+            MovePlayer(Direction_Forward);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MovePlayerBackwards();
+            MovePlayer(Direction_Back);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MovePlayerLeft();
-            StartCoroutine(AlignPlayerModel()); //New
+            MovePlayer(Direction_Left);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MovePlayerRight();
-            StartCoroutine(AlignPlayerModel()); //New
+            MovePlayer(Direction_Right);
         }
     }
 
     private bool Setup()
     {
         map_MaxEdgePos = TerrainController.GetComponent<TerrainGeneration>().GetMapHalfWidth * TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
-        
+
+        return true;
+    }
+
+    private bool MovePlayer(int direction)
+    {
+        if (!player_IsMoving)
+        {
+            player_IsMoving = true; 
+            switch (direction)
+            {
+                case Direction_Forward:
+                    MovePlayerForward();
+                    break;
+                case Direction_Left:
+                    MovePlayerLeft();
+                    break;
+                case Direction_Right:
+                    MovePlayerRight();
+                    break;
+                case Direction_Back:
+                    MovePlayerBackwards();
+                    break;
+                default:
+                    return false;
+            }
+            PlayerCleanFloatErrors();
+            StartCoroutine(AlignPlayerModel());
+        }
+
         return true;
     }
 
@@ -75,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
-    
+
     private bool MovePlayerBackwards()
     {
         if (player_CurrentBackstepCount < 2 && CanPlayerMove(Direction_Back))
@@ -92,7 +120,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        return true;    
+        return true;
     }
 
     private bool MovePlayerLeft()
@@ -150,8 +178,20 @@ public class PlayerController : MonoBehaviour
             default:
                 return false;
         }
+    }
 
-    IEnumerator AlignPlayerModel() //New
+    private bool PlayerCleanFloatErrors()  //I REALLY HATE FLOATS!!!
+    {
+        Vector3 temp_PlayerPos = PlayerObject.transform.position;
+        temp_PlayerPos.x = Mathf.Round(temp_PlayerPos.x);  //I hate floats...
+        temp_PlayerPos.y = Mathf.Round(temp_PlayerPos.y);
+        temp_PlayerPos.z = Mathf.Round(temp_PlayerPos.z);
+
+        PlayerObject.transform.position = temp_PlayerPos;
+        return true;
+    }
+
+    IEnumerator AlignPlayerModel()
     {
         float timeSinceStarted = 0f;
         while (true)
@@ -160,6 +200,7 @@ public class PlayerController : MonoBehaviour
             PlayerModel.transform.position = Vector3.Lerp(PlayerModel.transform.position, PlayerObject.transform.position, timeSinceStarted);
             if (PlayerModel.transform.position == PlayerObject.transform.position)
             {
+                player_IsMoving = false;
                 yield break;
             }
             yield return null;

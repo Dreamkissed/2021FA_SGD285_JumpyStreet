@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerObject: {fileID: 1908974389}
+  PlayerModel: {fileID: 1908974389}
   TerrainController: {fileID: 507680847}
   player_MaxBackstepCount: 2
 --- !u!23 &1908974391

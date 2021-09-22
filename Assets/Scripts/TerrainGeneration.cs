@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
-    [SerializeField] private GameObject pfb_BlankTile;
+    [SerializeField] private GameObject pfb_BlankTile;  //Placeholder tile prefabs
     [SerializeField] private GameObject pfb_GrassTile;
     [SerializeField] private GameObject pfb_GrassFence;
     [SerializeField] private GameObject pfb_GrassTree;
@@ -23,8 +23,14 @@ public class TerrainGeneration : MonoBehaviour
      * is easier and more time effective to just bruteforce the random tile
      * selection than mess with \resources, AddressableAssets, or other plug-in
      */
-    private GameObject[] GrassArray;
-    private GameObject[] WaterArray;
+
+    //adding two(four) more for clear/blocked for generator
+    private GameObject[] tileArray_GrassClear;
+    private GameObject[] tileArray_GrassBlock;
+    private GameObject[] tileArray_RoadClear;
+    private GameObject[] tileArray_RoadBlock;
+    private GameObject[] tileArray_WaterClear;
+    private GameObject[] tileArray_WaterBlock;
 
     [SerializeField] private int map_lengthForward = 7;  //tiles ahead of player
     [SerializeField] private int map_lengthBack = 3;  //tiles behind player
@@ -32,15 +38,23 @@ public class TerrainGeneration : MonoBehaviour
     private GameObject[,] map_arrayTiles;  //set up in MapGeneration();
     private int map_lengthTotal, map_widthTotal;  //set up in MapGeneration();
     private int map_backRow = 0;
+    private int map_readFrame;
     private readonly float map_tileInterval = 5.0f;  //edge length of square tiles
     private bool map_isMoving = false;
 
     private byte player_tileMap;
+    private bool[] map_RowPass, map_RowPassPrevious;
 
     private void Awake()
     {
-        GrassArray = new GameObject[] { pfb_GrassTile, pfb_GrassFence, pfb_GrassTree };  //!!!MN!!!
-        WaterArray = new GameObject[] { pfb_WaterTile, pfb_WaterLog };  //!!!MN!!!
+        map_readFrame = map_widthHalf;
+
+        tileArray_GrassClear = new GameObject[] { pfb_GrassTile};  //!!!MN!!!
+        tileArray_GrassBlock = new GameObject[] { pfb_GrassFence, pfb_GrassTree };
+        tileArray_RoadClear = new GameObject[] { pfb_RoadTile };
+        tileArray_RoadBlock = new GameObject[] { };
+        tileArray_WaterClear = new GameObject[] { pfb_WaterLog };
+        tileArray_WaterBlock = new GameObject[] { pfb_WaterTile };
 
         MapGeneration();
     }
@@ -52,33 +66,58 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            
-        }
+
     }
 
     private bool MapGeneration()
     {
-        map_lengthTotal = map_lengthForward + 1 + map_lengthBack;
-        map_widthTotal = map_widthHalf * 2 + 1;
+        map_lengthTotal = map_lengthBack + 1 + map_lengthForward;
+        map_widthTotal = (map_widthHalf * 2) + 1;
         map_arrayTiles = new GameObject[map_lengthTotal, map_widthTotal];
+        map_RowPass = new bool[map_widthTotal];
+        map_RowPassPrevious = new bool[map_widthTotal];
 
-        for (int l = 0; l < map_lengthTotal; l++)
+        for (int w = 0; w < map_RowPassPrevious.Length; w++)  //initializes previous row prior to generation.
         {
-            //GameObject rowBiome = BiomeRandomBiomeRow();
+            map_RowPassPrevious[w] = (Random.value > 0.5f);
+        }
+        map_RowPassPrevious[0] = false;
+        map_RowPassPrevious[1] = false;
+        map_RowPassPrevious[map_RowPassPrevious.Length - 1] = false;
+        map_RowPassPrevious[map_RowPassPrevious.Length - 2] = false;
+
+        for (int l = 0; l < map_lengthBack; l++)
+        {
+            for (int w = 0; w < map_widthTotal; w++)
+            {
+                float temp_tilePosX = ((float)l - (float)map_lengthBack) * map_tileInterval;
+                float temp_tilePosY = 0.0f;  //playfield base level
+                float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
+                Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
+
+                if (w == map_widthHalf)
+                {
+                    map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(0, true), temp_tilePos, Quaternion.identity);
+                }
+                else
+                {
+                    map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(0, false), temp_tilePos, Quaternion.identity);
+                }
+            }
+        }
+
+
+        for (int l = map_lengthBack; l < map_lengthTotal; l++)
+        {
+            for (int w = 0; w < map_RowPass.Length; w++)
+            {
+
+            }
+            map_RowPass[0] = false;
+            map_RowPass[1] = false;
+            map_RowPass[map_RowPassPrevious.Length - 1] = false;
+            map_RowPass[map_RowPassPrevious.Length - 2] = false;
+
             int rowBiome = Random.Range(0, biomeCount);
 
             for (int w = 0; w < map_widthTotal; w++)
@@ -138,11 +177,35 @@ public class TerrainGeneration : MonoBehaviour
     {
         return biome switch
         {
-            0 => GrassArray[Random.Range(0, GrassArray.Length)],
-            1 => pfb_RoadTile,
-            2 => WaterArray[Random.Range(0, WaterArray.Length)],
+            0 => tileArray_GrassClear[Random.Range(0, tileArray_GrassClear.Length)],
+            1 => tileArray_RoadClear[Random.Range(0, tileArray_RoadClear.Length)],
+            2 => tileArray_WaterClear[Random.Range(0, tileArray_WaterClear.Length)],
             _ => pfb_BlankTile,
         };
+    }
+
+    private GameObject BiomeRandomBiomeRow(int biome, bool pass)
+    {
+        if (pass)
+        {
+            return biome switch
+            {
+                0 => tileArray_GrassClear[Random.Range(0, tileArray_GrassClear.Length)],
+                1 => tileArray_RoadClear[Random.Range(0, tileArray_RoadClear.Length)],
+                2 => tileArray_WaterClear[Random.Range(0, tileArray_WaterClear.Length)],
+                _ => pfb_BlankTile,
+            };
+        }
+        else
+        {
+            return biome switch
+            {
+                0 => tileArray_GrassBlock[Random.Range(0, tileArray_GrassBlock.Length)],
+                1 => tileArray_RoadClear[Random.Range(0, tileArray_RoadClear.Length)],
+                2 => tileArray_WaterBlock[Random.Range(0, tileArray_WaterBlock.Length)],
+                _ => pfb_BlankTile,
+            };
+        }
     }
 
     private bool MapCleanFloatErrors()  //I REALLY HATE FLOATS!!!
