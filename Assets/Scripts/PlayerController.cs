@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     private bool Setup()
     {
         map_MaxEdgePos = TerrainController.GetComponent<TerrainGeneration>().GetMapHalfWidth * TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
-        
+
         return true;
     }
 
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
-    
+
     private bool MovePlayerBackwards()
     {
         if (player_CurrentBackstepCount < 2 && CanPlayerMove(Direction_Back))
@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        return true;    
+        return true;
     }
 
     private bool MovePlayerLeft()
@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
             default:
                 return false;
         }
-
+    }
     IEnumerator AlignPlayerModel() //New
     {
         float timeSinceStarted = 0f;
