@@ -154,26 +154,34 @@ public class PlayerController : MonoBehaviour
             case Direction_Forward:
                 if ((player_tileMap & 0b01000000) == 0b01000000)
                 {
+                    Debug.Log("Can Move Foward");
                     return true;
                 }
+                Debug.Log("No Move");
                 return false;
             case Direction_Left:
                 if ((player_tileMap & 0b00001000) == 0b00001000)
                 {
+                    Debug.Log("Can Move Left");
                     return true;
                 }
+                Debug.Log("No Move");
                 return false;
             case Direction_Right:
                 if ((player_tileMap & 0b00010000) == 0b00010000)
                 {
+                    Debug.Log("Can Move Right");
                     return true;
                 }
+                Debug.Log("No Move");
                 return false;
             case Direction_Back:
                 if ((player_tileMap & 0b00000010) == 0b00000010)
                 {
+                    Debug.Log("Can Move Back");
                     return true;
                 }
+                Debug.Log("No Move");
                 return false;
             default:
                 return false;

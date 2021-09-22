@@ -6,8 +6,10 @@
 //Date: 09/08/2021
 /////////////////////////////////////////////
 
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TerrainGeneration : MonoBehaviour
 {
@@ -79,14 +81,11 @@ public class TerrainGeneration : MonoBehaviour
 
         for (int w = 0; w < map_RowPassPrevious.Length; w++)  //initializes previous row prior to generation.
         {
-            map_RowPassPrevious[w] = (Random.value > 0.5f);
+            map_RowPassPrevious[w] = false;
         }
-        map_RowPassPrevious[0] = false;
-        map_RowPassPrevious[1] = false;
-        map_RowPassPrevious[map_RowPassPrevious.Length - 1] = false;
-        map_RowPassPrevious[map_RowPassPrevious.Length - 2] = false;
+        map_RowPassPrevious[map_widthHalf] = true;
 
-        for (int l = 0; l < map_lengthBack; l++)
+        for (int l = 0; l < map_lengthBack; l++)  //sets initial background/behind path in woods
         {
             for (int w = 0; w < map_widthTotal; w++)
             {
@@ -102,33 +101,53 @@ public class TerrainGeneration : MonoBehaviour
                 else
                 {
                     map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(0, false), temp_tilePos, Quaternion.identity);
+                    //map_arrayTiles[l, w] = Instantiate(pfb_GrassTree, temp_tilePos, Quaternion.identity);
                 }
             }
         }
 
-
-        for (int l = map_lengthBack; l < map_lengthTotal; l++)
+        for (int l = map_lengthBack; l < map_lengthTotal; l++)  //generates rest of map
         {
-            for (int w = 0; w < map_RowPass.Length; w++)
-            {
-
-            }
-            map_RowPass[0] = false;
+            map_RowPass[0] = false;  //ensures edges are unpassable for art reasons
             map_RowPass[1] = false;
             map_RowPass[map_RowPassPrevious.Length - 1] = false;
             map_RowPass[map_RowPassPrevious.Length - 2] = false;
-
             int rowBiome = Random.Range(0, biomeCount);
 
-            for (int w = 0; w < map_widthTotal; w++)
+            for (int w = 2; w < map_widthTotal - 2; w++)  //random fill-in
+            {
+                //map_RowPass[w] = (Random.value > 0.5f);
+                map_RowPass[w] = false;
+            }
+            
+            map_RowPass[map_readFrame] = true;  //ensures there is a path for player overrides randomness
+            if (Random.value > 0.5f)
+            {
+                if (map_readFrame < map_RowPass.Length - 3)
+                {
+                    map_readFrame++;
+                }
+            }
+            else
+            {
+                if (map_readFrame > 2)
+                {
+                    map_readFrame--;
+                }
+            }
+            map_RowPass[map_readFrame] = true;
+
+            for (int w = 0; w < map_RowPass.Length; w++)  //instansiates the GameObject tiles
             {
                 float temp_tilePosX = ((float)l - (float)map_lengthBack) * map_tileInterval;
                 float temp_tilePosY = 0.0f;  //playfield base level
                 float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
                 Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
 
-                map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(rowBiome), temp_tilePos, Quaternion.identity);
+                map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(rowBiome, map_RowPass[w]), temp_tilePos, Quaternion.identity);
             }
+
+            Array.Copy(map_RowPass, map_RowPassPrevious, map_RowPass.Length);  //moves current pass-row into previous pass-row for next loop
         }
 
         return true;
@@ -136,8 +155,33 @@ public class TerrainGeneration : MonoBehaviour
 
     private bool MapNewRowFront()
     {
-        //GameObject rowBiome = BiomeRandomBiomeRow();
         int rowBiome = Random.Range(0, biomeCount);
+
+        map_RowPass[0] = false;  //ensures edges are unpassable for art reasons
+        map_RowPass[1] = false;
+        map_RowPass[map_RowPassPrevious.Length - 1] = false;
+        map_RowPass[map_RowPassPrevious.Length - 2] = false;
+        for (int w = 2; w < map_widthTotal - 2; w++)  //random fill-in
+        {
+            //map_RowPass[w] = (Random.value > 0.5f);
+            map_RowPass[w] = false;
+        }
+        map_RowPass[map_readFrame] = true;  //ensures there is a path for player overrides randomness
+        if (Random.value > 0.5f)
+        {
+            if (map_readFrame < map_RowPass.Length - 3)
+            {
+                map_readFrame++;
+            }
+        }
+        else
+        {
+            if (map_readFrame > 2)
+            {
+                map_readFrame--;
+            }
+        }
+        map_RowPass[map_readFrame] = true;
 
         for (int w = 0; w < map_widthTotal; w++)
         {
@@ -148,15 +192,12 @@ public class TerrainGeneration : MonoBehaviour
             float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
             Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
 
-            map_arrayTiles[map_backRow, w] = Instantiate(BiomeRandomBiomeRow(rowBiome), temp_tilePos, Quaternion.identity);
-            /*
-            tempPositionVector = map_arrayTiles[map_backRow, w].transform.position;
-            tempPositionVector.x = map_lengthForward * map_tileInterval;
-            map_arrayTiles[map_backRow, w].transform.position = tempPositionVector;
-            */
+            map_arrayTiles[map_backRow, w] = Instantiate(BiomeRandomBiomeRow(rowBiome,map_RowPass[w]), temp_tilePos, Quaternion.identity);
         }
         map_backRow++;
         map_backRow %= map_lengthTotal;
+
+        Array.Copy(map_RowPass, map_RowPassPrevious, map_RowPass.Length);  //moves current pass-row into previous pass-row for next loop
 
         return true;
     }
