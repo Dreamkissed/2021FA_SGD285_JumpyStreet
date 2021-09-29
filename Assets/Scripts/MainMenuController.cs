@@ -9,21 +9,29 @@ public class MainMenuController : MonoBehaviour
 {
     public GameObject highscorePanel;
     public Text highscoreText;
-    public Scene GameScene;
+    public GameObject mainmenuPanel;
+    //public Scene GameScene;
 
     string scorelog = @"Assets\scorelog.txt"; //The file path of the scorelog text file
     List<string> scorelist = new List<string>(); //A list that holds the data from the scorelog file
 
+    private void Awake()
+    {
+        highscorePanel.SetActive(false);
+        mainmenuPanel.SetActive(true);
+    }
+
     public void OnPlayButtonClick()
     {
         //Loads the gamescene
-        SceneManager.LoadScene(GameScene.ToString());
+        SceneManager.LoadScene(1);
     }
 
     public void OnHighScoreButtonClick()
     {
         //Sets the highscorepanel to active
         highscorePanel.SetActive(true);
+        mainmenuPanel.SetActive(false);
         //Reads the text file to an array, and sets it to the list
         string[] scorearray = File.ReadAllLines(scorelog);
         scorelist.Clear();
@@ -36,7 +44,6 @@ public class MainMenuController : MonoBehaviour
         {
             highscoreText.text += s + "\n";
         }
-
     }
 
     public void OnQuitButtonClick()
@@ -49,6 +56,7 @@ public class MainMenuController : MonoBehaviour
     {
         //Sets the highscorepanel to inactive
         highscorePanel.SetActive(false);
+        mainmenuPanel.SetActive(true);
     }
 
 }
