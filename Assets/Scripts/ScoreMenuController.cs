@@ -12,14 +12,30 @@ using UnityEngine.UI;
 public class ScoreMenuController : MonoBehaviour
 {
     [SerializeField] private Text scoreDisplay;
+    [SerializeField] private InputField inputName;
+    private HighScoreScript scoreScript;
 
-    void Start()
+    private string playerName = "";
+    private int playerScore = 0;
+
+    private void Awake()
     {
-        
+        scoreScript = this.gameObject.GetComponent<HighScoreScript>();
     }
 
-    void Update()
+    private void Start()
     {
-        
+        scoreDisplay.text = scoreScript.ReturnScoreForDisplay();
+    }
+
+    public void ConfirmScore()
+    {
+        if (inputName.text != "")
+        {
+            scoreScript.AddHighScore(inputName.text, playerScore);
+            scoreDisplay.text = scoreScript.ReturnScoreForDisplay();
+        }
+
+        //disable buttons after entering so no padding scores.
     }
 }

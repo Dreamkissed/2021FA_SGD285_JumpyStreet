@@ -9,8 +9,8 @@ public class HighScoreScript : MonoBehaviour
     private bool arraysBuilt = false;
 
     //private List<string> scorelist = new List<string>(); //A list that holds the data from the scorelog file
-    private string[] scoreListNames;  //Need to be able to sort names by score and then add by score, etc
-    private int[] scoreListScores;
+    [SerializeField] private string[] scoreListNames;  //Need to be able to sort names by score and then add by score, etc
+    [SerializeField] private int[] scoreListScores;
     
     private string newScoreName; //The new player to be added
     private int newScoreValue;
@@ -22,9 +22,30 @@ public class HighScoreScript : MonoBehaviour
 
     private bool SortScores()  //quicksort on the arrays and writes at end
     {
+        bool isSorted = false;
+
         if (arraysBuilt)
         {
-            Quick_Sort(0, scoreListScores.Length - 1);
+            while (!isSorted)
+            {
+                isSorted = true;
+                for (int i = scoreListScores.Length - 1; i > 0; i--)
+                {
+                    if (scoreListScores[i - 1] < scoreListScores[i])
+                    {
+                        int tempI = scoreListScores[i - 1];
+                        string tempS = scoreListNames[i - 1];
+
+                        scoreListScores[i - 1] = scoreListScores[i];
+                        scoreListNames[i - 1] = scoreListNames[i];
+
+                        scoreListScores[i] = tempI;
+                        scoreListNames[i] = tempS;
+
+                        isSorted = false;
+                    }
+                }
+            }
             WriteHighScoresArray();
             return true;
         }
@@ -50,6 +71,7 @@ public class HighScoreScript : MonoBehaviour
             }
 
             arraysBuilt = true;
+            SortScores();
             return true;
         }
         else
@@ -72,7 +94,7 @@ public class HighScoreScript : MonoBehaviour
         string tempOutputString = "   Player name --- Score\n";
         for (int i = 0; i < scoreListNames.Length; i++)
         {
-            string tempRowBuilding = i + 1.ToString() + ": " + scoreListNames[i] + "---" + scoreListScores[i].ToString() + "\n";
+            string tempRowBuilding = (i + 1).ToString() + ": " + scoreListNames[i] + "---" + scoreListScores[i].ToString() + "\n";
             tempOutputString += tempRowBuilding;
         }
         return tempOutputString;
@@ -106,7 +128,7 @@ public class HighScoreScript : MonoBehaviour
 
     private bool WriteHighScoresArray()  //Writes the list to the text file
     {
-        SortScores();
+        //SortScores();
 
         StreamWriter sw = new StreamWriter(scorelog);
         for (int i = 0; i < scoreListNames.Length; i++)
@@ -119,9 +141,12 @@ public class HighScoreScript : MonoBehaviour
         return true;
     }
 
+    /* DNI!  Not smart enough for Quicksort today
     //https://www.w3resource.com/csharp-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-9.php
+
     private void Quick_Sort(int left, int right)
     {
+        Debug.Log("Quicksorting");
         if (left < right)
         {
             int pivotI = Partition(left, right);
@@ -138,6 +163,7 @@ public class HighScoreScript : MonoBehaviour
 
     private int Partition(int left, int right)
     {
+        Debug.Log("Partitioning"); 
         int pivotI = scoreListScores[left];
         //string pivotS = scoreListNames[left];
         while (true)
@@ -168,4 +194,5 @@ public class HighScoreScript : MonoBehaviour
             }
         }
     }
+    */
 }
