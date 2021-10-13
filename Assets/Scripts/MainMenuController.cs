@@ -1,22 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.IO;
 
 public class MainMenuController : MonoBehaviour
 {
-    public GameObject highscorePanel;
-    public Text highscoreText;
-    public GameObject mainmenuPanel;
-    //public Scene GameScene;
+    [SerializeField] private GameObject highscorePanel;
+    [SerializeField] private Text highscoreText;
+    [SerializeField] private GameObject mainmenuPanel;
 
-    string scorelog = @"Assets\scorelog.txt"; //The file path of the scorelog text file
-    List<string> scorelist = new List<string>(); //A list that holds the data from the scorelog file
+    private HighScoreScript scoreScript;
 
     private void Awake()
     {
+        scoreScript = this.gameObject.GetComponent<HighScoreScript>();
         highscorePanel.SetActive(false);
         mainmenuPanel.SetActive(true);
     }
@@ -32,18 +28,8 @@ public class MainMenuController : MonoBehaviour
         //Sets the highscorepanel to active
         highscorePanel.SetActive(true);
         mainmenuPanel.SetActive(false);
-        //Reads the text file to an array, and sets it to the list
-        string[] scorearray = File.ReadAllLines(scorelog);
-        scorelist.Clear();
-        for (int i = 0; i <= scorearray.Length - 1; i++)
-        {
-            scorelist.Add(scorearray[i]);
-        }
-        //Writes the list to the textbox
-        foreach (string s in scorelist)
-        {
-            highscoreText.text += s + "\n";
-        }
+
+        highscoreText.text = scoreScript.ReturnScoreForDisplay();        
     }
 
     public void OnQuitButtonClick()
@@ -58,5 +44,4 @@ public class MainMenuController : MonoBehaviour
         highscorePanel.SetActive(false);
         mainmenuPanel.SetActive(true);
     }
-
 }
