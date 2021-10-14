@@ -13,6 +13,9 @@ using Random = UnityEngine.Random;
 
 public class TerrainGeneration : MonoBehaviour
 {
+    private const string TileTag_Kill = "Kill";
+    private const string TileTag_Pass = "Pass";
+    
     [SerializeField] private GameObject pfb_BlankTile;  //Placeholder tile prefabs
     [SerializeField] private GameObject pfb_GrassTile;
     [SerializeField] private GameObject pfb_GrassFence;
@@ -73,7 +76,7 @@ public class TerrainGeneration : MonoBehaviour
 
     private bool MapGeneration()
     {
-        map_lengthTotal = map_lengthBack + 1 + map_lengthForward;
+        map_lengthTotal = map_lengthBack + 1 + map_lengthForward;  //Sets up map size
         map_widthTotal = (map_widthHalf * 2) + 1;
         map_arrayTiles = new GameObject[map_lengthTotal, map_widthTotal];
         map_RowPass = new bool[map_widthTotal];
@@ -87,14 +90,14 @@ public class TerrainGeneration : MonoBehaviour
 
         for (int l = 0; l < map_lengthBack; l++)  //sets initial background/behind path in woods
         {
-            for (int w = 0; w < map_widthTotal; w++)
+            for (int w = 0; w < map_widthTotal; w++)  //Loops through the row and places the tiles
             {
                 float temp_tilePosX = ((float)l - (float)map_lengthBack) * map_tileInterval;
                 float temp_tilePosY = 0.0f;  //playfield base level
                 float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
                 Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
 
-                if (w == map_widthHalf)
+                if (w == map_widthHalf)  //leaves middle row clear for 'path' back.
                 {
                     map_arrayTiles[l, w] = Instantiate(BiomeRandomBiomeRow(0, true), temp_tilePos, Quaternion.identity);
                 }
@@ -106,7 +109,25 @@ public class TerrainGeneration : MonoBehaviour
             }
         }
 
-        for (int l = map_lengthBack; l < map_lengthTotal; l++)  //generates rest of map
+        for (int w = 0; w < map_widthTotal; w++)
+        {
+            float temp_tilePosX = 0.0f; //((float)l - (float)map_lengthBack) * map_tileInterval;
+            float temp_tilePosY = 0.0f;  //playfield base level
+            float temp_tilePosZ = ((float)w - (float)map_widthHalf) * map_tileInterval;
+            Vector3 temp_tilePos = new Vector3(temp_tilePosX, temp_tilePosY, temp_tilePosZ);
+
+            if(w == map_widthHalf - 1 || w == map_widthHalf || w == map_widthHalf + 1)
+            {
+                map_arrayTiles[map_lengthBack, w] = Instantiate(BiomeRandomBiomeRow(0, true), temp_tilePos, Quaternion.identity);
+            }
+            else
+            {
+                map_arrayTiles[map_lengthBack, w] = Instantiate(BiomeRandomBiomeRow(0, false), temp_tilePos, Quaternion.identity);
+            }
+            
+        }
+
+        for (int l = map_lengthBack + 1; l < map_lengthTotal; l++)  //generates rest of map
         {
             map_RowPass[0] = false;  //ensures edges are unpassable for art reasons
             map_RowPass[1] = false;
@@ -121,7 +142,7 @@ public class TerrainGeneration : MonoBehaviour
             }
             
             map_RowPass[map_readFrame] = true;  //ensures there is a path for player overrides randomness
-            if (Random.value > 0.5f)
+            if (Random.value > 0.5f)  //'path' is two clear tiles per row, this will randomly shift it one side or another to make it wander
             {
                 if (map_readFrame < map_RowPass.Length - 3)
                 {
@@ -309,39 +330,39 @@ public class TerrainGeneration : MonoBehaviour
         map_isMoving = true;
     }
 
-    private byte SurroundingTileMap(int x, int z)
+    private byte SurroundingTileMap(int x, int z, string tag)
     {
         player_tileMap = 0b00000000;
 
-        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b10000000;
         }
-        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b01000000;
         }
-        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00100000;
         }
-        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00010000;
         }
-        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + 0) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00001000;
         }
-        if (map_arrayTiles[(x + map_lengthTotal + -1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal + -1) % map_lengthTotal, (z + map_widthTotal + 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00000100;
         }
-        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal + 0) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00000010;
         }
-        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == "Pass")
+        if (map_arrayTiles[(x + map_lengthTotal - 1) % map_lengthTotal, (z + map_widthTotal - 1) % map_widthTotal].tag == tag)
         {
             player_tileMap += 0b00000001;
         }
@@ -371,7 +392,7 @@ public class TerrainGeneration : MonoBehaviour
         return true;
     }
 
-    public byte Map_PlayerTileMap(Vector3 playerPos)
+    public byte Map_PlayerPassMap(Vector3 playerPos)
     {
         for (int x = 0; x < map_lengthTotal; x++)
         {
@@ -383,7 +404,30 @@ public class TerrainGeneration : MonoBehaviour
                     float tempColumn = map_arrayTiles[x, z].transform.position.z;
                     if (tempColumn >= playerPos.z - 0.1 && tempColumn <= playerPos.z + 0.1)
                     {
-                        return SurroundingTileMap(x, z);
+                        byte tempPass = SurroundingTileMap(x, z, TileTag_Pass);
+                        byte tempKill = SurroundingTileMap(x, z, TileTag_Kill);
+                        return ((byte)(tempPass | tempKill));
+                        //return SurroundingTileMap(x, z, TileTag_Pass);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    public byte Map_PlayerKillMap(Vector3 playerPos)
+    {
+        for (int x = 0; x < map_lengthTotal; x++)
+        {
+            float tempRow = map_arrayTiles[x, 0].transform.position.x;
+            if (tempRow >= playerPos.x - 0.1 && tempRow <= playerPos.x + 0.1)
+            {
+                for (int z = 0; z < map_widthTotal; z++)
+                {
+                    float tempColumn = map_arrayTiles[x, z].transform.position.z;
+                    if (tempColumn >= playerPos.z - 0.1 && tempColumn <= playerPos.z + 0.1)
+                    {
+                        return SurroundingTileMap(x, z, TileTag_Kill);
                     }
                 }
             }

@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour
     private int player_CurrentBackstepCount;
     private int player_ScoreCount;
     private float map_MaxEdgePos;
-    private byte player_tileMap;
+    private byte player_passMap;
+    private byte player_killMap;
     private bool player_IsMoving = false;
 
     private bool game_IsPaused = false;
@@ -103,6 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         if (player_CurrentBackstepCount > 0 && CanPlayerMove(Direction_Forward))
         {
+            PlayerLethalMove(Direction_Forward);
             player_CurrentBackstepCount--;
             Vector3 tempPlayerPos = PlayerObject.transform.position;
             tempPlayerPos.x += TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
@@ -110,6 +112,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (CanPlayerMove(Direction_Forward))
         {
+            PlayerLethalMove(Direction_Forward);
             player_ScoreCount++;
             UpdateScoreDisplay(player_ScoreCount);
             TerrainController.GetComponent<TerrainGeneration>().Map_MoveForward(player_CurrentBackstepCount);
@@ -126,6 +129,7 @@ public class PlayerController : MonoBehaviour
 
             if (player_CurrentBackstepCount <= player_MaxBackstepCount)
             {
+                PlayerLethalMove(Direction_Back);
                 Vector3 tempPlayerPos = PlayerObject.transform.position;
                 tempPlayerPos.x -= TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
                 PlayerObject.transform.position = tempPlayerPos;
@@ -145,6 +149,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerObject.transform.position.z < map_MaxEdgePos && CanPlayerMove(Direction_Left))
         {
+            PlayerLethalMove(Direction_Left);
             Vector3 tempPlayerPos = PlayerObject.transform.position;
             tempPlayerPos.z += TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
             PlayerObject.transform.position = tempPlayerPos;
@@ -156,6 +161,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerObject.transform.position.z > -map_MaxEdgePos && CanPlayerMove(Direction_Right))
         {
+            PlayerLethalMove(Direction_Right); 
             Vector3 tempPlayerPos = PlayerObject.transform.position;
             tempPlayerPos.z -= TerrainController.GetComponent<TerrainGeneration>().GetMapTileInterval;
             PlayerObject.transform.position = tempPlayerPos;
@@ -165,31 +171,70 @@ public class PlayerController : MonoBehaviour
 
     private bool CanPlayerMove(int direction)
     {
-        player_tileMap = TerrainController.GetComponent<TerrainGeneration>().Map_PlayerTileMap(this.transform.position);
+        player_passMap = TerrainController.GetComponent<TerrainGeneration>().Map_PlayerPassMap(this.transform.position);
 
         switch (direction)
         {
             case Direction_Forward:
-                if ((player_tileMap & 0b01000000) == 0b01000000)
+                if ((player_passMap & 0b01000000) == 0b01000000)
                 {
                     return true;
                 }
                 return false;
             case Direction_Left:
-                if ((player_tileMap & 0b00010000) == 0b00010000)
+                if ((player_passMap & 0b00010000) == 0b00010000)
                 {
                     return true;
                 }
                 return false;
             case Direction_Right:
-                if ((player_tileMap & 0b00001000) == 0b00001000)
+                if ((player_passMap & 0b00001000) == 0b00001000)
                 {
                     return true;
                 }
                 return false;
             case Direction_Back:
-                if ((player_tileMap & 0b00000010) == 0b00000010)
+                if ((player_passMap & 0b00000010) == 0b00000010)
                 {
+                    return true;
+                }
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private bool PlayerLethalMove(int direction)
+    {
+        player_killMap = TerrainController.GetComponent<TerrainGeneration>().Map_PlayerKillMap(this.transform.position);
+        
+        switch (direction)
+        {
+            case Direction_Forward:
+                if ((player_killMap & 0b01000000) == 0b01000000)
+                {
+                    PlayerKill();
+                    return true;
+                }
+                return false;
+            case Direction_Left:
+                if ((player_killMap & 0b00010000) == 0b00010000)
+                {
+                    PlayerKill();
+                    return true;
+                }
+                return false;
+            case Direction_Right:
+                if ((player_killMap & 0b00001000) == 0b00001000)
+                {
+                    PlayerKill();
+                    return true;
+                }
+                return false;
+            case Direction_Back:
+                if ((player_killMap & 0b00000010) == 0b00000010)
+                {
+                    PlayerKill();
                     return true;
                 }
                 return false;
