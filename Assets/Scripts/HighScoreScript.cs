@@ -15,8 +15,8 @@ public class HighScoreScript : MonoBehaviour
     private string newScoreName; //The new player to be added
     private int newScoreValue;
     //public InputField nameInput; //An inputbox for the player's name  //Rewriting AddHighScore() to take name/score as params
-    private string tempScoreName = "";
-    private int tempScoreValue = 0;
+    //private string tempScoreName = "";
+    //private int tempScoreValue = 0;
     //private string playername = ""; //The name of the player
     //public string playerscore; //The score of the player
 

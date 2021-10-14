@@ -507,7 +507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &533961267
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10585,7 +10585,7 @@ GameObject:
   - component: {fileID: 1128070639}
   m_Layer: 0
   m_Name: FPSPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10617,6 +10617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff5072a69d2e614c8ccc90d6a3449c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIGameObject: {fileID: 2114457297}
   PlayerObject: {fileID: 1128070637}
   PlayerModel: {fileID: 1128070637}
   TerrainController: {fileID: 518338473}
@@ -10704,7 +10705,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1270223134}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2114457305}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1270223134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11459,7 +11472,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1671228247}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2114457303}
+        m_TargetAssemblyTypeName: ScoreMenuController, Assembly-CSharp
+        m_MethodName: QuitToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1671228247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11857,7 +11882,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1992048431}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2114457303}
+        m_TargetAssemblyTypeName: ScoreMenuController, Assembly-CSharp
+        m_MethodName: QuitToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1992048431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11908,6 +11945,7 @@ GameObject:
   - component: {fileID: 2114457300}
   - component: {fileID: 2114457299}
   - component: {fileID: 2114457298}
+  - component: {fileID: 2114457305}
   - component: {fileID: 2114457303}
   - component: {fileID: 2114457302}
   m_Layer: 5
@@ -12028,3 +12066,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreDisplay: {fileID: 350663182}
   inputName: {fileID: 980864215}
+  inputButton: {fileID: 1757153483}
+--- !u!114 &2114457305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114457297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc98897539e8ee48b721b4af3ef34fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 1415375404}
+  scoreMenu: {fileID: 533961266}

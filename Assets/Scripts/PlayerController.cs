@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private const int Direction_Right = 3;
     private const int Direction_Back = 4;
 
+    [SerializeField] private GameObject UIGameObject;
+
     [SerializeField] private GameObject PlayerObject;
     [SerializeField] private GameObject PlayerModel; //New
     [SerializeField] private GameObject TerrainController;
@@ -29,6 +31,8 @@ public class PlayerController : MonoBehaviour
     private byte player_tileMap;
     private bool player_IsMoving = false;
 
+    private bool game_IsPaused = false;
+
     private void Start()
     {
         Setup();
@@ -36,21 +40,24 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (!game_IsPaused)
         {
-            MovePlayer(Direction_Forward);
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            MovePlayer(Direction_Back);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            MovePlayer(Direction_Left);
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MovePlayer(Direction_Right);
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                MovePlayer(Direction_Forward);
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                MovePlayer(Direction_Back);
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                MovePlayer(Direction_Left);
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                MovePlayer(Direction_Right);
+            }
         }
     }
 
@@ -206,6 +213,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("PLAYER DIE!!!!");
         UpdateScoreDisplay(-666);
+        UIGameObject.GetComponent<UIHandler>().PlayerDies();
 
         return true;
     }
@@ -216,6 +224,14 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
+
+    public bool SetGamePause(bool isPaused)
+    {
+        game_IsPaused = isPaused;
+        return game_IsPaused;
+    }
+
+    public int GetPlayerScore => player_ScoreCount;
 
     IEnumerator AlignPlayerModel()
     {
