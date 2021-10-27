@@ -233,6 +233,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mobileMonster_MaxCount: 3
   mobileMonster_MinCount: 0
+  mobileMonster_MaxSpeed: 10
+  mobileMonster_MinSpeed: 5
+  mobileMonster_SpawnIntervalMax: 1
+  mobileMonster_SpawnIntervalMin: 2.5
   mobileMonster_prefab: {fileID: 6296157780942548069, guid: ee70fc170d8e3e04abe6220d97b85e34, type: 3}
   terrainControllerObject: {fileID: 507680847}
 --- !u!4 &409419141

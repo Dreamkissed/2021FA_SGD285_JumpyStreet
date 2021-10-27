@@ -438,4 +438,5 @@ public class TerrainGeneration : MonoBehaviour
     public float GetMapTileInterval => map_tileInterval;
     public int GetMapHalfWidth => map_widthHalf;
     public int GetMapFullWidth => map_widthTotal;
+    public int GetMapForwardLength => map_lengthForward;
 }
