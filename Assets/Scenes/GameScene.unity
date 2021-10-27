@@ -436,6 +436,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350663180}
   m_CullTransparentMesh: 1
+--- !u!1 &352266668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 352266670}
+  - component: {fileID: 352266669}
+  m_Layer: 0
+  m_Name: CreaturePooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &352266669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352266668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c9c2811b445694499641fbbb6eddff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileMonster_MaxCount: 6
+  mobileMonster_MinCount: 0
+  mobileMonster_MaxSpeed: 5
+  mobileMonster_MinSpeed: 1
+  mobileMonster_SpawnIntervalMax: 1
+  mobileMonster_SpawnIntervalMin: 2.5
+  mobileMonster_prefab: {fileID: 6296157780942548069, guid: 93cce96465308e04682115ebb3d1567c, type: 3}
+  terrainControllerObject: {fileID: 518338473}
+--- !u!4 &352266670
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352266668}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &518338473
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +524,7 @@ MonoBehaviour:
   pfb_WaterTile: {fileID: 6873171379702291922, guid: de3b97ad0cedc2f41b85a7525c1d945d, type: 3}
   pfb_WaterLog: {fileID: 6873171379702291922, guid: edecbfe2bde026e4bbcf78f1bde01c0b, type: 3}
   biomeCount: 3
+  creatureController: {fileID: 352266668}
   map_lengthForward: 15
   map_lengthBack: 5
   map_widthHalf: 4
@@ -10583,6 +10635,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1128070638}
   - component: {fileID: 1128070639}
+  - component: {fileID: 1128070641}
+  - component: {fileID: 1128070640}
   m_Layer: 0
   m_Name: FPSPlayer
   m_TagString: Player
@@ -10623,6 +10677,35 @@ MonoBehaviour:
   TerrainController: {fileID: 518338473}
   ScoreText: {fileID: 1515644782}
   player_MaxBackstepCount: 2
+--- !u!65 &1128070640
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128070637}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1128070641
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128070637}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1270223131
 GameObject:
   m_ObjectHideFlags: 0

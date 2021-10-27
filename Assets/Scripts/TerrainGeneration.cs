@@ -24,6 +24,7 @@ public class TerrainGeneration : MonoBehaviour
     [SerializeField] private GameObject pfb_WaterTile;
     [SerializeField] private GameObject pfb_WaterLog;
     [SerializeField] private int biomeCount = 3;
+    [SerializeField] private GameObject creatureController;
     /* These two are magic number arrays, because for this project's scale, it
      * is easier and more time effective to just bruteforce the random tile
      * selection than mess with \resources, AddressableAssets, or other plug-in
@@ -377,6 +378,7 @@ public class TerrainGeneration : MonoBehaviour
             if (!map_isMoving)
             {
                 map_isMoving = true;
+                creatureController.GetComponent<TrainController>().Creatures_MoveForward();
                 StartCoroutine(TreadmillForward());
             }
             return true;
