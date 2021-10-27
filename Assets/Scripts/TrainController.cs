@@ -43,6 +43,7 @@ public class TrainController : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Ticking");
         mobileMonster_SpawnTarget = Random.Range(mobileMonster_SpawnIntervalMin, mobileMonster_SpawnIntervalMax);
         if (mobileMonster_SpawnTimer >= mobileMonster_SpawnTarget)
         {
@@ -84,7 +85,7 @@ public class TrainController : MonoBehaviour
             //Vector3 tempPosition = new Vector3(terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * x, 0.0f, terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * terrainControllerObject.GetComponent<TerrainGeneration>().GetMapHalfWidth * -1);
             Vector3 tempPosition = new Vector3(0.0f, 0.0f, 0.0f);
                 tempPosition.x = terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * x;
-                tempPosition.y = 0.0f;
+                tempPosition.y = mobileMonster_prefab.transform.localScale.y / 2;
                 tempPosition.z = terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * terrainControllerObject.GetComponent<TerrainGeneration>().GetMapHalfWidth * -1;
             pool_mobileMonster[i].transform.position = tempPosition;
             //pool_mobileMonster[i].SetActive(true);
@@ -93,12 +94,16 @@ public class TrainController : MonoBehaviour
         return true;
     }
 
-    private bool SpawnCreature()
+    public bool SpawnCreature()
     {
+        //Debug.Log("Attempting to Spawn");
         for (int i = 0; i < pool_mobileMonster.Length; i++)
         {
+            //Debug.Log("Spawning Loop Check" + i.ToString() + ", " + pool_mobileMonsterisPacing[i].ToString());
             if (!pool_mobileMonsterisPacing[i])
             {
+                //Debug.Log("Picked mob to spawn");
+                pool_mobileMonsterisPacing[i] = true;
                 Vector3 tempPosition = pool_mobileMonster[i].transform.position;
                 tempPosition.x = (float)Random.Range(1, terrainControllerObject.GetComponent<TerrainGeneration>().GetMapForwardLength) * terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval;
                 tempPosition.z = terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * terrainControllerObject.GetComponent<TerrainGeneration>().GetMapHalfWidth * -1;
@@ -106,7 +111,6 @@ public class TrainController : MonoBehaviour
                 pool_mobileMonster[i].SetActive(true);
 
                 pool_mobileMonsterMovement[i] = StartCoroutine(MoveCreature(i));
-                pool_mobileMonsterisPacing[i] = true;
 
                 return true; ;
             }
@@ -114,16 +118,10 @@ public class TrainController : MonoBehaviour
         
         return true;
     }
-    
-    public bool Creatures_MoveForward()
-    {
-        StartCoroutine(CreatureTreadmillForward());
-            
-        return true;
-    }
 
-    private IEnumerator MoveCreature(int critter)
+    IEnumerator MoveCreature(int critter)
     {
+        //Debug.Log("Moving Creature" + critter.ToString());
         while(pool_mobileMonster[critter].transform.position.z < terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval * terrainControllerObject.GetComponent<TerrainGeneration>().GetMapHalfWidth)
         {
             //float speedTwitch = Random.Range(mobileMonster_MinSpeed, mobileMonster_MaxSpeed);
@@ -136,21 +134,5 @@ public class TrainController : MonoBehaviour
         pool_mobileMonster[critter].SetActive(false);
         pool_mobileMonsterisPacing[critter] = false;
         StopCoroutine(pool_mobileMonsterMovement[critter]);
-    }
-
-    private IEnumerator CreatureTreadmillForward()
-    {
-        float intervalStep = 0.1f; //!!!!!
-
-        for (float f = 0.0f; f <= terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval; f += intervalStep)
-        {
-            for (int i = 0; i < pool_mobileMonster.Length; i++)
-            {
-                Vector3 tempPositon = pool_mobileMonster[i].transform.position;
-                tempPositon.x -= intervalStep;
-                pool_mobileMonster[i].transform.position = tempPositon;
-            }
-            yield return null;
-        }
     }
 }

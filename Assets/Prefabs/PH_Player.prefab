@@ -95,9 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff5072a69d2e614c8ccc90d6a3449c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIGameObject: {fileID: 0}
   PlayerObject: {fileID: 1919445956597603944}
-  PlayerModel: {fileID: 0}
   TerrainController: {fileID: 0}
-  ScoreText: {fileID: 0}
   player_MaxBackstepCount: 2
