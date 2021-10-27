@@ -235,8 +235,8 @@ MonoBehaviour:
   mobileMonster_MinCount: 0
   mobileMonster_MaxSpeed: 10
   mobileMonster_MinSpeed: 5
-  mobileMonster_SpawnIntervalMax: 1
-  mobileMonster_SpawnIntervalMin: 2.5
+  mobileMonster_SpawnIntervalMax: 5
+  mobileMonster_SpawnIntervalMin: 7.5
   mobileMonster_prefab: {fileID: 6296157780942548069, guid: ee70fc170d8e3e04abe6220d97b85e34, type: 3}
   terrainControllerObject: {fileID: 507680847}
 --- !u!4 &409419141
@@ -290,6 +290,7 @@ MonoBehaviour:
   pfb_WaterTile: {fileID: 6873171379702291922, guid: de3b97ad0cedc2f41b85a7525c1d945d, type: 3}
   pfb_WaterLog: {fileID: 6873171379702291922, guid: edecbfe2bde026e4bbcf78f1bde01c0b, type: 3}
   biomeCount: 3
+  creatureController: {fileID: 409419139}
   map_lengthForward: 7
   map_lengthBack: 3
   map_widthHalf: 5
@@ -595,6 +596,8 @@ GameObject:
   - component: {fileID: 1908974392}
   - component: {fileID: 1908974391}
   - component: {fileID: 1908974390}
+  - component: {fileID: 1908974394}
+  - component: {fileID: 1908974395}
   m_Layer: 0
   m_Name: PH_Player
   m_TagString: Untagged
@@ -684,6 +687,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1908974394
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908974389}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1908974395
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908974389}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1931067942
 GameObject:
   m_ObjectHideFlags: 0
