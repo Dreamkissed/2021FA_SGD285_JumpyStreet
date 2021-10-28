@@ -290,7 +290,7 @@ public class TerrainGeneration : MonoBehaviour
 
     private IEnumerator TreadmillForward()
     {
-        float intervalStep = 0.1f; //!!!!!
+        float intervalStep = 0.25f; //!!!!!
         
         for (float f = 0.0f; f <= map_tileInterval; f += intervalStep)
         {

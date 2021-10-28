@@ -140,7 +140,7 @@ public class TrainController : MonoBehaviour
 
     private IEnumerator CreatureTreadmillForward()
     {
-        float intervalStep = 0.1f; //!!!!!
+        float intervalStep = 0.25f; //!!!!!
 
         for (float f = 0.0f; f <= terrainControllerObject.GetComponent<TerrainGeneration>().GetMapTileInterval; f += intervalStep)
         {
